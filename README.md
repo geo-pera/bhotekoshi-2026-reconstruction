@@ -38,8 +38,8 @@ aws s3 cp --no-sign-request s3://copernicus-dem-30m/Copernicus_DSM_COG_10_N28_00
 3. `disturbance.py` → `trimline.py` → `superelevation.py` — measurements
 4. `stereo_dh_dense.py` — deposition from WV03 opposite-look parallax
    (requires a user-supplied dense tie-point module `tie_points.py`; the
-   required interface is documented in the script header — AROSICS or any
-   phase-correlation tie-point engine can back it)
+   required interface is documented in the script header, and any dense
+   phase-correlation tie-point implementation can back it)
 5. `route1d.py` — calibrated 1D routing; `swe2d.py` / `swe2d_torch.py` — 2D
 6. `export_viewer2.py` / `animate*.py` — visualization products
 

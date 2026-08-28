@@ -8,8 +8,8 @@ import sys, csv
 import numpy as np
 import rasterio
 # Dense tie-point matching requires an external phase-correlation engine
-# (not included). Any implementation with the interface below works, e.g.
-# AROSICS: extract_tie_points(ref, tgt, ref_gt, tgt_gt, grid_res, window_size,
+# (not included). Any implementation with the interface below works:
+#   extract_tie_points(ref, tgt, ref_gt, tgt_gt, grid_res, window_size,
 #   max_shift, min_reliability, nodata, ransac, min_std[, min_range_fraction])
 #   -> dict(x_map, y_map, x_shift_m, y_shift_m, reliability, inlier)
 from tie_points import extract_tie_points  # user-supplied module
