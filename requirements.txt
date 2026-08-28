@@ -1,0 +1,9 @@
+numpy
+rasterio
+gdal
+torch
+opencv-python
+matplotlib
+pillow
+omnicloudmask
+omniwatermask
