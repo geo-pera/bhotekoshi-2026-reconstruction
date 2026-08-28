@@ -6,5 +6,5 @@ galchhi_stage_rise,9,m per 30 min,gauge (reported),ICIMOD press release / DHM vi
 malekhu_stage_rise,7,m per ~30 min,gauge (reported),media citing DHM,secondary reference
 max_flow_height_report,~80,m above river,report,news synthesis (Wikipedia),gorge superelevation claim; consistent with trimlines
 hydropower_destroyed,6,count,report,NDRRMA/media,"Rasuwagadhi, Chilime, Trishuli 3A/3B, Trishuli, Devighat"
-deaths_reported,160+,count,report,Nepal Police / state media,provisional as of 2026-08-28; not a product of this analysis
+deaths_reported,289,count,report,Nepal Police via Kathmandu Post 2026-08-28,"826+ out of contact; majority downstream (Chitwan 108, Nawalparasi 77); provisional; not a product of this analysis"
 barrier_lake_report,2,Mm3,report (unverified),Chinese authorities via community dataset,"Chhochen–Purepu confluence, 27 Aug; +3 Mm3 inflow expected by 30 Aug; 0% clear-sky EO"
