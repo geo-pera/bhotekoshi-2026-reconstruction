@@ -36,13 +36,12 @@ def write_gj(name, feats):
         json.dump(fc, f)
     print(f"{name}: {len(feats)} features")
 
-def mask_to_feats(mask, transform, props, min_px=8, simplify_m=0.0):
-    m = ndimage.binary_opening(mask, iterations=1)
+def mask_to_feats(mask, transform, props, min_px=8, opening=True):
+    m = ndimage.binary_opening(mask, iterations=1) if opening else mask
     m = features.sieve(m.astype(np.uint8), min_px)
     feats = []
     for geom, val in features.shapes(m, mask=m.astype(bool), transform=transform):
         g4326 = transform_geom(UTM, "EPSG:4326", geom, precision=6)
-        area = sum(1 for _ in ())  # placeholder, area added below
         feats.append({"type": "Feature", "geometry": g4326, "properties": dict(props)})
     return feats
 
@@ -89,10 +88,10 @@ with rasterio.open(f"{ROOT}/sim/dem/dh_surface_32m.tif") as s:
 dh[np.abs(dh) > 60] = np.nan
 write_gj("deposition_wedge",
          mask_to_feats(np.nan_to_num(dh) > 4, dtr, {"layer": "deposition > +4 m",
-                       "method": "opposite-look WV03 ortho parallax"}, min_px=4))
+                       "method": "opposite-look WV03 ortho parallax"}, min_px=3, opening=False))
 write_gj("erosion_zones",
          mask_to_feats(np.nan_to_num(dh) < -4, dtr, {"layer": "erosion < -4 m",
-                       "method": "opposite-look WV03 ortho parallax"}, min_px=4))
+                       "method": "opposite-look WV03 ortho parallax"}, min_px=3, opening=False))
 
 # 6. SAR new-dark patches
 d = np.load(f"{ROOT}/sim/inputs/s1_amplitude_change.npz")
@@ -124,10 +123,12 @@ for row in csv.DictReader(open(f"{ROOT}/sim/inputs/trimline_profile_v2.csv")):
         except (ValueError, TypeError, KeyError):
             continue
         if np.isfinite(h) and h > 0.5:
+            quality = "suspect_haze_artifact" if 30500 <= c <= 33000 else "ok"
             feats.append({"type": "Feature",
                           "geometry": {"type": "Point", "coordinates": [round(lon, 6), round(lat, 6)]},
                           "properties": {"chainage_km": round(c / 1000, 2), "bank": side,
                                          "flow_height_m": round(h, 1),
+                                         "quality": quality,
                                          "uncertain": bool(int(row.get(f"void_{side}", 0) or 0))}})
 write_gj("trimline_observations", feats)
 
