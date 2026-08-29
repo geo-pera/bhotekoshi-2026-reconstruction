@@ -51,3 +51,14 @@ matplotlib, pillow, omnicloudmask, omniwatermask.
 Code: MIT (see LICENSE). Derived data products inherit **CC BY-NC 4.0** from the
 source imagery (© Planet Labs PBC, © Vantor — open data programs). Terrain
 derived from NASA NSIDC HMA DEM and Copernicus GLO-30 (free use with attribution).
+
+## Vector products (`vectors/`)
+GIS-ready GeoJSON layers (EPSG:4326) plus a combined GeoPackage
+(`bhotekoshi_analysis.gpkg`, 13 layers): modelled event and breach-scenario
+inundation extents, ensemble inundation-probability classes, stereo-measured
+deposition/erosion polygons, Sentinel-1 change candidates (including the
+detachment-zone cluster), 217 trimline flow-height points, superelevation
+velocity points, per-settlement modelled arrival times, the flow-path
+centerline with km markers, day-2 disturbance polygons for the lower Trishuli,
+and OSM buildings in or within 50 m of the detected scour. Regenerate with
+`tools/make_vectors.py`. Same CC BY-NC 4.0 terms as other derived products.
