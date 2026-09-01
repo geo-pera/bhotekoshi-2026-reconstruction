@@ -81,17 +81,22 @@ for lo, label in [(0.1, "P>=0.1"), (0.5, "P>=0.5"), (0.9, "P>=0.9")]:
                                          "members": int(d["n_run"])}, min_px=8)
 write_gj("inundation_probability_2m", feats)
 
-# 4/5. deposition and erosion from stereo dh
-with rasterio.open(f"{ROOT}/sim/dem/dh_surface_32m.tif") as s:
-    dh = s.read(1, masked=True).filled(np.nan)
-    dtr = s.transform
-dh[np.abs(dh) > 60] = np.nan
-write_gj("deposition_wedge",
-         mask_to_feats(np.nan_to_num(dh) > 4, dtr, {"layer": "deposition > +4 m",
-                       "method": "opposite-look WV03 ortho parallax"}, min_px=3, opening=False))
-write_gj("erosion_zones",
-         mask_to_feats(np.nan_to_num(dh) < -4, dtr, {"layer": "erosion < -4 m",
-                       "method": "opposite-look WV03 ortho parallax"}, min_px=3, opening=False))
+# 4/5. deposition and erosion from the stereo-DSM elevation change.
+# Supersedes the retracted ortho-parallax layers (see README "Correction").
+# The dh rasters ship as release assets: dh_reachA_2m.tif / dh_reachB_2m.tif.
+import glob as _glob
+for _p in sorted(_glob.glob(f"{ROOT}/vantor/stereo/release/dh_reach?_2m.tif")):
+    _reach = _p.split("dh_reach")[1][0]
+    with rasterio.open(_p) as s:
+        dh = s.read(1, masked=True).filled(np.nan)
+        dtr = s.transform
+    dh[np.abs(dh) > 60] = np.nan
+    write_gj(f"deposition_dsm_reach{_reach}",
+             mask_to_feats(np.nan_to_num(dh) > 2, dtr, {"layer": "deposition > +2 m",
+                           "method": "0.5 m stereo DSM minus pre-event DEM"}, min_px=60))
+    write_gj(f"erosion_dsm_reach{_reach}",
+             mask_to_feats(np.nan_to_num(dh) < -2, dtr, {"layer": "erosion < -2 m",
+                           "method": "0.5 m stereo DSM minus pre-event DEM"}, min_px=60))
 
 # 6. SAR new-dark patches
 d = np.load(f"{ROOT}/sim/inputs/s1_amplitude_change.npz")
